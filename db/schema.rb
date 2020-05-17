@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20200517014336) do
 
   create_table "organizations", force: :cascade do |t|
     t.string "organization_name"
+    t.integer "admin_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -31,6 +32,8 @@ ActiveRecord::Schema.define(version: 20200517014336) do
   create_table "templates", force: :cascade do |t|
     t.string "title"
     t.json "form"
+    t.integer "user_id"
+    t.integer "admin_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -39,6 +42,7 @@ ActiveRecord::Schema.define(version: 20200517014336) do
     t.string "username"
     t.string "password"
     t.string "organization_name"
+    t.integer "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -14,7 +14,7 @@ class OrganizationController < ApplicationController
       admin = Admin.where({:id => admin_token['admin_id']})
 
       if admin
-        admin_org = admin.Organization.all
+        admin_org = admin.organization
 
         return render json: {res: "found", data: admin_org}
       end
@@ -29,10 +29,10 @@ class OrganizationController < ApplicationController
       decoded_token = JWT.decode token, Rails.application.secrets.secret_key_base, true, { algorithm: 'HS256' }
       admin_token = decoded_token[0]
 
-      admin = Admin.where({:id => admin_token['admin_id']})
+      admin = Admin.where({:id => admin_token['admin_id']}).first
 
       if admin
-       new_admin_org = admin.Organization.new({
+       new_admin_org = admin.build_organization({
           :organization_name => params[:organization_name]
         })
         if new_admin_org.save
@@ -53,7 +53,7 @@ class OrganizationController < ApplicationController
 
       admin = Admin.find(decoded_token["admin_id"])
       if admin
-        admin_org = admin.Organization.first
+        admin_org = admin.organization
 
         if admin_org.update(params[:organization_name])
 
@@ -76,7 +76,7 @@ class OrganizationController < ApplicationController
       admin = Admin.find(decoded_token["admin_id"])
 
       if admin
-        admin_org = admin.Organization.first
+        admin_org = admin.organization
 
         admin_org.destroy
 

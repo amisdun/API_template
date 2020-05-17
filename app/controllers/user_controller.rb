@@ -30,23 +30,20 @@ class UserController < ApplicationController
 
       if decoded_token
         user = User.where({:username => params[:username]}).first
-        puts user
         if user
 
-          return render json: {res: "exist"}
+          return render json: {res: "exist"}, status: :unprocessable_entity
 
         else
           password_hash = BCrypt::Password.create(params[:password])
-          new_user = User.new({
+          User.new({
             :username => params[:username],
             :password => password_hash,
             :organization_name => params[:organization_name]
-          })
+          }).save
 
-          if new_user.save
 
-            return render json: {res: "created"}, status: :created
-          end
+          return render json: {res: "created"}, status: :created
         end
       end
     end
