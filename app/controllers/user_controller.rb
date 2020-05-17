@@ -17,6 +17,7 @@ class UserController < ApplicationController
       else
         return render json: {res: "failed"}
       end
+    else
       return render json: {res: "failed"}
     end
   end
@@ -27,25 +28,36 @@ class UserController < ApplicationController
 
     if token
       decoded_token = JWT.decode token, Rails.application.secrets.secret_key_base, true, { algorithm: 'HS256' }
-
+      puts decoded_token
       if decoded_token
         user = User.where({:username => params[:username]}).first
+        puts user
         if user
 
-          return render json: {res: "exist"}, status: :unprocessable_entity
+          return render json: {res: "exist"}
 
         else
           password_hash = BCrypt::Password.create(params[:password])
-          User.new({
+         new_user =  User.new({
             :username => params[:username],
             :password => password_hash,
-            :organization_name => params[:organization_name]
-          }).save
+            :organization_id => params[:organization_id]
+          })
+         puts new_user
+
+         if new_user.save
 
 
           return render json: {res: "created"}, status: :created
+          else
+            return render json: {res: "not saved"}
         end
+        end
+      else
+        return render json: {res: "Auth failed", msg: "provide token"}
       end
+    else
+      return render json: {res: "Auth failed", msg: "provide token"}
     end
   end
 end
