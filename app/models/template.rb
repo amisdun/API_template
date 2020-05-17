@@ -3,5 +3,5 @@ class Template < ApplicationRecord
 	validates :form, presence: true
 
     belongs_to :admin
-    #belongs_to :user
+    belongs_to :user
 end
